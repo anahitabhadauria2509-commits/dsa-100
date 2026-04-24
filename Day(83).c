@@ -1,39 +1,24 @@
 #include <stdio.h>
 
-int main() {
-    int n;
-    scanf("%d", &n);
-
-    int arr[100];
-
-    // Input array
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
-    }
-
-    // Selection Sort
+void selectionSort(int arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
-        int min_index = i;
-
-        for (int j = i + 1; j < n; j++) {
-            if (arr[j] < arr[min_index]) {
-                min_index = j;
-            }
-        }
-
-        // Swap
-        int temp = arr[i];
-        arr[i] = arr[min_index];
-        arr[min_index] = temp;
+        int min_idx = i;
+        for (int j = i + 1; j < n; j++)
+            if (arr[j] < arr[min_idx]) min_idx = j;
+        int temp = arr[min_idx];
+        arr[min_idx] = arr[i];
+        arr[i] = temp;
     }
+}
 
-    // Output sorted array
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
-    }
-
+int main() {
+    int arr[] = {64, 25, 12, 22, 11};
+    int n = sizeof(arr)/sizeof(arr[0]);
+    selectionSort(arr, n);
+    for (int i=0; i < n; i++) printf("%d ", arr[i]);
     return 0;
 }
+
 
 
 
