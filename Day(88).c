@@ -1,57 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Function to compare (for qsort)
-int compare(const void *a, const void *b) {
-    return (*(int*)a - *(int*)b);
-}
+int compare(const void* a, const void* b) { return (*(int*)a - *(int*)b); }
 
-// Check if cows can be placed with at least 'dist'
-int canPlace(int stalls[], int n, int k, int dist) {
-    int count = 1; // first cow at first stall
-    int last = stalls[0];
-
+int isPossible(int stalls[], int n, int k, int dist) {
+    int count = 1, last = stalls[0];
     for (int i = 1; i < n; i++) {
         if (stalls[i] - last >= dist) {
             count++;
             last = stalls[i];
         }
-        if (count >= k)
-            return 1;
     }
-    return 0;
+    return count >= k;
 }
 
 int main() {
-    int n, k;
-    scanf("%d %d", &n, &k);
-
-    int stalls[n];
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &stalls[i]);
-    }
-
-    // Sort stall positions
+    int stalls[] = {1, 2, 8, 4, 9}, n = 5, k = 3;
     qsort(stalls, n, sizeof(int), compare);
-
-    int low = 1;
-    int high = stalls[n - 1] - stalls[0];
-    int ans = 0;
-
+    int low = 1, high = stalls[n-1] - stalls[0], ans = 0;
     while (low <= high) {
-        int mid = (low + high) / 2;
-
-        if (canPlace(stalls, n, k, mid)) {
-            ans = mid;
-            low = mid + 1;   // try bigger distance
-        } else {
-            high = mid - 1;  // try smaller distance
-        }
+        int mid = low + (high - low) / 2;
+        if (isPossible(stalls, n, k, mid)) { ans = mid; low = mid + 1; }
+        else high = mid - 1;
     }
-
-    printf("%d\n", ans);
+    printf("Max Min Distance: %d", ans);
     return 0;
 }
+
 
 
 
