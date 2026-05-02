@@ -1,64 +1,31 @@
 #include <stdio.h>
 
-long long merge(int arr[], int temp[], int left, int mid, int right) {
-    int i = left;      // left subarray
-    int j = mid + 1;   // right subarray
-    int k = left;      // temp index
-    long long invCount = 0;
+void swap(int* a, int* b) { int t = *a; *a = *b; *b = t; }
 
-    while (i <= mid && j <= right) {
-        if (arr[i] <= arr[j]) {
-            temp[k++] = arr[i++];
-        } else {
-            temp[k++] = arr[j++];
-            invCount += (mid - i + 1); // count inversions
-        }
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high], i = (low - 1);
+    for (int j = low; j < high; j++) {
+        if (arr[j] < pivot) swap(&arr[++i], &arr[j]);
     }
-
-    // Remaining elements
-    while (i <= mid)
-        temp[k++] = arr[i++];
-
-    while (j <= right)
-        temp[k++] = arr[j++];
-
-    // Copy back
-    for (i = left; i <= right; i++)
-        arr[i] = temp[i];
-
-    return invCount;
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
 }
 
-long long mergeSort(int arr[], int temp[], int left, int right) {
-    long long invCount = 0;
-
-    if (left < right) {
-        int mid = (left + right) / 2;
-
-        invCount += mergeSort(arr, temp, left, mid);
-        invCount += mergeSort(arr, temp, mid + 1, right);
-
-        invCount += merge(arr, temp, left, mid, right);
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
-
-    return invCount;
 }
 
 int main() {
-    int n;
-    scanf("%d", &n);
-
-    int arr[n], temp[n];
-
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
-    }
-
-    long long result = mergeSort(arr, temp, 0, n - 1);
-
-    printf("%lld\n", result);
+    int arr[] = {10, 7, 8, 9, 1, 5};
+    quickSort(arr, 0, 5);
+    for(int i=0; i<6; i++) printf("%d ", arr[i]);
     return 0;
 }
+
 
 
 
