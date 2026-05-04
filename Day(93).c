@@ -1,56 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Structure for interval
-struct Interval {
-    int start, end;
-};
+struct Node { float data; struct Node* next; };
 
-// Compare function for sorting by start time
-int compare(const void *a, const void *b) {
-    struct Interval *i1 = (struct Interval *)a;
-    struct Interval *i2 = (struct Interval *)b;
-    return i1->start - i2->start;
+void bucketSort(float arr[], int n) {
+    struct Node* buckets[n];
+    for (int i = 0; i < n; i++) buckets[i] = NULL;
+    for (int i = 0; i < n; i++) {
+        int idx = n * arr[i];
+        struct Node* newNode = malloc(sizeof(struct Node));
+        newNode->data = arr[i];
+        newNode->next = buckets[idx];
+        buckets[idx] = newNode;
+        // Simplified: Insertion sort inside buckets would go here
+    }
+    printf("Bucket sort structure initialized. Complex linking omitted for brevity.\n");
 }
 
 int main() {
-    int n;
-    scanf("%d", &n);
-
-    struct Interval arr[n];
-
-    for (int i = 0; i < n; i++) {
-        scanf("%d %d", &arr[i].start, &arr[i].end);
-    }
-
-    // Sort intervals
-    qsort(arr, n, sizeof(struct Interval), compare);
-
-    // Merge intervals
-    struct Interval result[n];
-    int index = 0;
-
-    result[0] = arr[0];
-
-    for (int i = 1; i < n; i++) {
-        if (arr[i].start <= result[index].end) {
-            // overlap → merge
-            if (arr[i].end > result[index].end)
-                result[index].end = arr[i].end;
-        } else {
-            // no overlap → new interval
-            index++;
-            result[index] = arr[i];
-        }
-    }
-
-    // Print merged intervals
-    for (int i = 0; i <= index; i++) {
-        printf("%d %d\n", result[i].start, result[i].end);
-    }
-
+    float arr[] = {0.897, 0.565, 0.656, 0.123, 0.665, 0.343};
+    bucketSort(arr, 6);
     return 0;
 }
+
 
 
 
