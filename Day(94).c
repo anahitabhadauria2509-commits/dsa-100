@@ -1,51 +1,35 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-// Structure for car
-struct Car {
-    int position;
-    int speed;
-};
+long long mergeAndCount(int arr[], int temp[], int left, int mid, int right) {
+    int i = left, j = mid, k = left;
+    long long inv_count = 0;
+    while ((i <= mid - 1) && (j <= right)) {
+        if (arr[i] <= arr[j]) temp[k++] = arr[i++];
+        else { temp[k++] = arr[j++]; inv_count += (mid - i); }
+    }
+    while (i <= mid - 1) temp[k++] = arr[i++];
+    while (j <= right) temp[k++] = arr[j++];
+    for (i = left; i <= right; i++) arr[i] = temp[i];
+    return inv_count;
+}
 
-// Sort by position descending
-int compare(const void *a, const void *b) {
-    struct Car *c1 = (struct Car *)a;
-    struct Car *c2 = (struct Car *)b;
-    return c2->position - c1->position;
+long long _mergeSort(int arr[], int temp[], int left, int right) {
+    long long inv_count = 0;
+    if (right > left) {
+        int mid = (right + left) / 2;
+        inv_count += _mergeSort(arr, temp, left, mid);
+        inv_count += _mergeSort(arr, temp, mid + 1, right);
+        inv_count += mergeAndCount(arr, temp, left, mid + 1, right);
+    }
+    return inv_count;
 }
 
 int main() {
-    int n, target;
-    scanf("%d %d", &n, &target);
-
-    struct Car cars[n];
-
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &cars[i].position);
-    }
-
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &cars[i].speed);
-    }
-
-    // Sort cars by position (descending)
-    qsort(cars, n, sizeof(struct Car), compare);
-
-    int fleets = 0;
-    double lastTime = 0.0;
-
-    for (int i = 0; i < n; i++) {
-        double time = (double)(target - cars[i].position) / cars[i].speed;
-
-        if (time > lastTime) {
-            fleets++;
-            lastTime = time;
-        }
-    }
-
-    printf("%d\n", fleets);
+    int arr[] = {1, 20, 6, 4, 5}, temp[5];
+    printf("Inversions: %lld", _mergeSort(arr, temp, 0, 4));
     return 0;
 }
+
 
 
 
